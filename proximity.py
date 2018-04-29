@@ -5,12 +5,15 @@ import sys
 
 import RPi.GPIO as GPIO
 
-# Proximity vIN connected to BCM 26
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(26, GPIO.IN)
+GPIO.setwarnings(False)
+
+# Proximity vIN connected to BCM 26
+INPUT = 26
+#GPIO.setup(INPUT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(INPUT, GPIO.IN)
 
 # LED connected to BCM 17
-GPIO.setwarnings(False)
 GPIO.setup(17, GPIO.OUT)
 
 # Setup initial conditions
@@ -19,7 +22,7 @@ print(event)
 pin_triggered = 0
 
 # Set pin values to current
-pin = last_pin = GPIO.input(26)
+pin = last_pin = GPIO.input(INPUT)
 if pin == 0:
     sys.exit("ERROR: invalid state, pin already triggered")
 
@@ -29,7 +32,7 @@ while event < 10:
         # Hold the LED on for 1 second only
         GPIO.output(17, False)
     last_pin = pin
-    pin = GPIO.input(26)
+    pin = GPIO.input(INPUT)
     if (last_pin == 1) and (pin == 0):
         # Increment the event counter whenever the sensor is triggered
         event += 1
